@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glam Rentora — Rent Luxury. Wear Glam.</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&amp;family=Jost:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#F8F5F0',
+            plum: '#4B1D3F',
+            gold: '#D4AF37',
+            goldDark: '#B8860B',
+            charcoal: '#2C2C2C',
+            warmGray: '#8A8075',
+          },
+          fontFamily: {
+            serif: ['Cormorant Garamond', 'Georgia', 'serif'],
+            sans: ['Jost', 'Helvetica', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { height: 100%; }
+    body { height: 100%; margin: 0; }
+    .app-scroll { height: 100%; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    @keyframes floatUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @keyframes slideRight { from { width: 0; } to { width: 60px; } }
+    
+    .anim-fade-up { animation: fadeUp 0.8s ease-out forwards; opacity: 0; }
+    .anim-fade-in { animation: fadeIn 1s ease-out forwards; opacity: 0; }
+    .anim-scale-in { animation: scaleIn 0.6s ease-out forwards; opacity: 0; }
+    
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    .delay-5 { animation-delay: 0.5s; }
+    .delay-6 { animation-delay: 0.6s; }
+    .delay-7 { animation-delay: 0.7s; }
+    .delay-8 { animation-delay: 0.8s; }
+    
+    .gold-line { height: 1px; background: linear-gradient(90deg, transparent, #C5A467, transparent); }
+    .gold-line-left { height: 1px; width: 60px; background: #C5A467; animation: slideRight 1s ease-out forwards; }
+    
+    .hero-bg {
+      background: linear-gradient(135deg, #4B1D3F 0%, #6B3A5F 30%, #8B5A7F 60%, #D4AF37 100%);
+      position: relative;
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 50%, rgba(75,29,63,0.25) 0%, transparent 50%),
+                  radial-gradient(ellipse at 80% 30%, rgba(248,245,240,0.2) 0%, transparent 40%),
+                  radial-gradient(ellipse at 50% 80%, rgba(212,175,55,0.15) 0%, transparent 60%);
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+    
+    .outfit-card {
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .outfit-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(75,29,63,0.15);
+    }
+    .outfit-card:hover .outfit-overlay {
+      opacity: 1;
+    }
+    .outfit-card:hover .outfit-img-inner {
+      transform: scale(1.05);
+    }
+    
+    .outfit-img-inner { transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .outfit-overlay { transition: opacity 0.4s ease; }
+    
+    .btn-gold {
+      background: linear-gradient(135deg, #D4AF37 0%, #E8C547 50%, #D4AF37 100%);
+      background-size: 200% 100%;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-gold:hover {
+      background-position: 100% 0;
+      box-shadow: 0 8px 30px rgba(212,175,55,0.4);
+      transform: translateY(-1px);
+    }
+    
+    .btn-outline-gold {
+      border: 1.5px solid #D4AF37;
+      transition: all 0.3s ease;
+    }
+    .btn-outline-gold:hover {
+      background: #D4AF37;
+      color: white;
+      box-shadow: 0 8px 30px rgba(212,175,55,0.3);
+    }
+    
+    .nav-blur {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    
+    .scroll-reveal { opacity: 0; transform: translateY(20px); transition: all 0.7s ease; }
+    .scroll-reveal.revealed { opacity: 1; transform: translateY(0); }
+    
+    .mobile-menu { transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-cream font-sans text-charcoal">
+  <div class="app-scroll" id="app-wrapper"><!-- Navigation -->
+   <nav class="fixed top-0 left-0 w-full z-50 nav-blur bg-cream/95 border-b border-gold/20" id="main-nav">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="flex items-center justify-between h-16 sm:h-20"><a href="#" class="flex items-center gap-3">
+       <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-plum border-2 border-gold flex items-center justify-center flex-shrink-0 overflow-hidden">
+        <img src="https://i.imgur.com/ycx62kk.png" alt="Glam Rentora Logo" class="w-full h-full object-cover rounded-full" loading="lazy">
+       </div><span class="font-serif text-xl sm:text-2xl font-semibold tracking-wide text-plum">Glam Rentora</span> </a> <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center gap-8"><a href="#collection" class="text-sm font-medium tracking-widest uppercase text-warmGray hover:text-gold transition-colors">Collection</a> <a href="#instagram" class="text-sm font-medium tracking-widest uppercase text-warmGray hover:text-gold transition-colors">Gallery</a> <a href="https://wa.me/919833319120" target="_blank" rel="noopener noreferrer" class="btn-gold text-white text-sm font-medium tracking-wider uppercase px-6 py-2.5 rounded-full">Contact</a>
+      </div><!-- Mobile Menu Toggle --> <button id="mobile-toggle" class="md:hidden p-2 text-charcoal" aria-label="Toggle menu"> <i data-lucide="menu" class="w-6 h-6"></i> </button>
+     </div>
+    </div><!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu md:hidden overflow-hidden max-h-0 opacity-0 bg-white/95 nav-blur border-t border-beige/30">
+     <div class="px-6 py-6 flex flex-col gap-4"><a href="#collection" class="mobile-nav-link text-sm font-medium tracking-widest uppercase text-warmGray hover:text-gold transition-colors py-2 border-b border-beige/30">Collection</a> <a href="#instagram" class="mobile-nav-link text-sm font-medium tracking-widest uppercase text-warmGray hover:text-gold transition-colors py-2 border-b border-beige/30">Gallery</a> <a href="https://wa.me/983339120" target="_blank" rel="noopener noreferrer" class="btn-gold text-white text-sm font-medium tracking-wider uppercase px-6 py-3 rounded-full text-center mt-2">Contact on WhatsApp</a>
+     </div>
+    </div>
+   </nav>
+   <main class="pt-20"><!-- Hero Section -->
+    <section class="relative min-h-[500px] flex items-center pt-12 sm:pt-0" id="hero" style="background-image: url('https://i.imgur.com/SW6yEhJ.png'); background-size: cover; background-position: center; background-attachment: fixed;">
+     <div class="absolute inset-0 bg-black/60"></div>
+     <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <div class="max-w-2xl mx-auto text-center lg:text-left lg:mx-0">
+       <div class="anim-fade-up delay-1"><span class="inline-block text-xs sm:text-sm font-sans font-medium tracking-[0.3em] uppercase text-goldDark mb-4 sm:mb-6">Premium Fashion Rentals</span>
+       </div>
+       <h1 class="anim-fade-up delay-2 font-serif text-4xl sm:text-5xl md:text-6xl font-light leading-[1.1] text-white mb-4 sm:mb-6" id="hero-headline">Rent Luxury.<br><span class="font-semibold italic text-white">Wear Glam.</span></h1>
+       <div class="gold-line-left mx-auto lg:mx-0 mb-6 sm:mb-8 anim-fade-up delay-3"></div>
+       <p class="anim-fade-up delay-4 font-sans text-base sm:text-lg text-warmGray leading-relaxed mb-8 sm:mb-10 max-w-lg mx-auto lg:mx-0" id="hero-subheadline">Designer lehengas, sarees, sharara sets, and anarkalis for every occasion. Wear luxury without the price tag.</p>
+       <div class="anim-fade-up delay-5 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"><a href="#collection" class="btn-gold text-white text-sm font-medium tracking-wider uppercase px-8 py-4 rounded-full text-center">Explore Collection</a> <a href="https://wa.me/919833319120" target="_blank" rel="noopener noreferrer" class="btn-outline-gold text-gold font-sans text-sm font-medium tracking-widest uppercase px-8 py-4 rounded-full text-center flex items-center justify-center gap-2">
+         <svg class="w-5 h-5" viewbox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.359 0-4.542-.803-6.273-2.152l-.44-.352-3.17 1.063 1.063-3.17-.352-.44A9.96 9.96 0 0112 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" />
+         </svg> Book on WhatsApp </a>
+       </div>
+      </div>
+     </div>
+    </section><!-- Trending Outfits Section -->
+    <section class="py-16 sm:py-20 lg:py-28 bg-gradient-to-b from-white to-cream/20">
+     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12 sm:mb-16 scroll-reveal"><span class="text-xs font-sans font-medium tracking-[0.3em] uppercase text-gold mb-3 block">Most Loved</span>
+       <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-light text-charcoal mb-4">Trending Outfits</h2>
+       <div class="gold-line max-w-xs mx-auto"></div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"><!-- Trending GR101 -->
+       <div class="outfit-card rounded-2xl overflow-hidden bg-white shadow-lg border border-beige/40 scroll-reveal cursor-pointer" data-category="lehenga" onclick="openOutfitPopup('GR101', 'Ivory Heavy Handwork Lehenga Set', 'Exquisite ivory lehenga with intricate hand embroidery and traditional detailing.', 'https://i.imgur.com/rUd3afp.png')">
+        <div class="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream to-beige"><img src="https://i.imgur.com/rUd3afp.png" alt="Ivory Heavy Handwork Lehenga Set" loading="lazy" class="outfit-img-inner w-full h-full object-cover" onerror="this.style.background='#F0E8DA';">
+         <div class="outfit-overlay absolute inset-0 bg-charcoal/30 flex items-center justify-center opacity-0"><button onclick="event.stopPropagation(); openOutfitPopup('GR101', 'Ivory Heavy Handwork Lehenga Set', 'Exquisite ivory lehenga with intricate hand embroidery and traditional detailing.', 'https://i.imgur.com/rUd3afp.png')" class="bg-white text-charcoal font-sans text-xs tracking-widest uppercase px-6 py-3 rounded-full font-medium hover:bg-gold hover:text-white transition-all">View Details</button>
+         </div>
+         <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full"><span class="text-xs font-sans font-medium tracking-wider text-goldDark">GR101</span>
+         </div>
+        </div>
+        <div class="p-5 sm:p-6">
+         <div class="mb-3"><span class="text-xs font-sans font-medium tracking-wider text-goldDark uppercase block mb-2">Lehenga</span>
+          <h3 class="font-serif text-base sm:text-lg font-bold text-charcoal">Ivory Heavy Handwork Lehenga Set</h3>
+         </div>
+         <p class="font-sans text-xs text-charcoal/70 leading-relaxed line-clamp-2">Exquisite ivory lehenga with intricate hand embroidery and traditional detailing.</p>
+        </div>
+       </div><!-- Trending GR104 -->
+       <div class="outfit-card rounded-2xl overflow-hidden bg-white shadow-lg border border-beige/40 scroll-reveal cursor-pointer" data-category="anarkali" onclick="openOutfitPopup('GR104', 'Pink Banarasi Brocade Anarkali Set', 'Traditional pink Banarasi with stunning brocade work and classic elegance.', 'https://i.imgur.com/QebxTHN.jpeg')">
+        <div class="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream to-beige"><img src="https://i.imgur.com/QebxTHN.jpeg" alt="Pink Banarasi Brocade Anarkali Set" loading="lazy" class="outfit-img-inner w-full h-full object-cover" onerror="this.style.background='#F0E8DA';">
+         <div class="outfit-overlay absolute inset-0 bg-charcoal/30 flex items-center justify-center opacity-0"><button onclick="event.stopPropagation(); openOutfitPopup('GR104', 'Pink Banarasi Brocade Anarkali Set', 'Traditional pink Banarasi with stunning brocade work and classic elegance.', 'https://i.imgur.com/QebxTHN.jpeg')" class="bg-white text-charcoal font-sans text-xs tracking-widest uppercase px-6 py-3 rounded-full font-medium hover:bg-gold hover:text-white transition-all">View Details</button>
+         </div>
+         <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full"><span class="text-xs font-sans font-medium tracking-wider text-goldDark">GR104</span>
+         </div>
+        </div>
+        <div class="p-5 sm:p-6">
+         <div class="mb-3"><span class="text-xs font-sans font-medium tracking-wider text-goldDark uppercase block mb-2">Anarkali</span>
+          <h3 class="font-serif text-base sm:text-lg font-bold text-charcoal">Pink Banarasi Brocade Anarkali Set</h3>
+         </div>
+         <p class="font-sans text-xs text-charcoal/70 leading-relaxed line-clamp-2">Traditional pink Banarasi with stunning brocade work and classic elegance.</p>
+        </div>
+       </div><!-- Trending GR108 -->
+       <div class="outfit-card rounded-2xl overflow-hidden bg-white shadow-lg border border-beige/40 scroll-reveal cursor-pointer" data-category="gown" onclick="openOutfitPopup('GR108', 'Powder Blue Mirror Work Pleated Gown', 'Elegant powder blue gown with mirror work embellishments and pleated design.', 'https://i.imgur.com/SXmxcuL.jpeg')">
+        <div class="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream to-beige"><img src="https://i.imgur.com/SXmxcuL.jpeg" alt="Powder Blue Mirror Work Pleated Gown" loading="lazy" class="outfit-img-inner w-full h-full object-cover" onerror="this.style.background='#F0E8DA';">
+         <div class="outfit-overlay absolute inset-0 bg-charcoal/30 flex items-center justify-center opacity-0"><button onclick="event.stopPropagation(); openOutfitPopup('GR108', 'Powder Blue Mirror Work Pleated Gown', 'Elegant powder blue gown with mirror work embellishments and pleated design.', 'https://i.imgur.com/SXmxcuL.jpeg')" class="bg-white text-charcoal font-sans text-xs tracking-widest uppercase px-6 py-3 rounded-full font-medium hover:bg-gold hover:text-white transition-all">View Details</button>
+         </div>
+         <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full"><span class="text-xs font-sans font-medium tracking-wider text-goldDark">GR108</span>
+         </div>
+        </div>
+        <div class="p-5 sm:p-6">
+         <div class="mb-3"><span class="text-xs font-sans font-medium tracking-wider text-goldDark uppercase block mb-2">Gown</span>
+          <h3 class="font-serif text-base sm:text-lg font-bold text-charcoal">Powder Blue Mirror Work Pleated Gown</h3>
+         </div>
+         <p class="font-sans text-xs text-charcoal/70 leading-relaxed line-clamp-2">Elegant powder blue gown with mirror work embellishments and pleated design.</p>
+        </div>
+       </div><!-- Trending GR107 -->
+       <div class="outfit-card rounded-2xl overflow-hidden bg-white shadow-lg border border-beige/40 scroll-reveal cursor-pointer" data-category="saree" onclick="openOutfitPopup('GR107', 'Peach Sabyasachi Inspired Ready-to-Wear Saree', 'Designer-inspired ready-to-wear saree in beautiful peach with luxe details.', 'https://i.imgur.com/GZa4n6C.jpeg')">
+        <div class="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream to-beige"><img src="https://i.imgur.com/GZa4n6C.jpeg" alt="Peach Sabyasachi Inspired Ready-to-Wear Saree" loading="lazy" class="outfit-img-inner w-full h-full object-cover" onerror="this.style.background='#F0E8DA';">
+         <div class="outfit-overlay absolute inset-0 bg-charcoal/30 flex items-center justify-center opacity-0"><button onclick="event.stopPropagation(); openOutfitPopup('GR107', 'Peach Sabyasachi Inspired Ready-to-Wear Saree', 'Designer-inspired ready-to-wear saree in beautiful peach with luxe details.', 'https://i.imgur.com/GZa4n6C.jpeg')" class="bg-white text-charcoal font-sans text-xs tracking-widest uppercase px-6 py-3 rounded-full font-medium hover:bg-gold hover:text-white transition-all">View Details</button>
+         </div>
+         <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full"><span class="text-xs font-sans font-medium tracking-wider text-goldDark">GR107</span>
+         </div>
+        </div>
+        <div class="p-5 sm:p-6">
+         <div class="mb-3"><span class="text-xs font-sans font-medium tracking-wider text-goldDark uppercase block mb-2">Saree</span>
+          <h3 class="font-serif text-base sm:text-lg font-bold text-charcoal">Peach Sabyasachi Inspired Ready-to-Wear Saree</h3>
+         </div>
+         <p class="font-sans text-xs text-charcoal/70 leading-relaxed line-clamp-2">Designer-inspired ready-to-wear saree in beautiful peach with luxe details.</p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section><!-- Featured Outfits Collection -->
+    <section id="collection" class="py-16 sm:py-20 lg:py-28 bg-white">
+     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12 sm:mb-16 scroll-reveal"><span class="text-xs font-sans font-medium tracking-[0.3em] uppercase text-gold mb-3 block">Complete Collection</span>
+       <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-light text-charcoal mb-4">All Outfits</h2>
+       <div class="gold-line max-w-xs mx-auto"></div>
+      </div><!-- Search Bar -->
+      <div class="mb-8 sm:mb-10 flex justify-center">
+       <div class="w-full sm:w-96 relative"><input type="text" id="outfit-search" placeholder="Search by outfit code (e.g., GR101)" class="w-full px-6 py-3 sm:py-4 rounded-full border-2 border-gold/30 focus:border-gold focus:outline-none font-sans text-sm text-charcoal placeholder-warmGray/50 transition-colors"> <i data-lucide="search" class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-warmGray pointer-events-none"></i>
+       </div>
+      </div><!-- Category Filter Section -->
+      <div class="mb-12 sm:mb-16 flex flex-wrap justify-center gap-3 sm:gap-4"><button class="category-filter active px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-sm font-medium tracking-wider uppercase transition-all duration-300 border-2" data-category="all" style="background: #D4AF37; color: white; border-color: #D4AF37;"> All Outfits </button> <button class="category-filter px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-sm font-medium tracking-wider uppercase transition-all duration-300 border-2" data-category="lehenga" style="border-color: #D4AF37; color: #D4AF37; background: transparent;"> Lehenga </button> <button class="category-filter px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-sm font-medium tracking-wider uppercase transition-all duration-300 border-2" data-category="anarkali" style="border-color: #D4AF37; color: #D4AF37; background: transparent;"> Anarkali </button> <button class="category-filter px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-sm font-medium tracking-wider uppercase transition-all duration-300 border-2" data-category="gown" style="border-color: #D4AF37; color: #D4AF37; background: transparent;"> Gown </button> <button class="category-filter px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-sm font-medium tracking-wider uppercase transition-all duration-300 border-2" data-category="saree" style="border-color: #D4AF37; color: #D4AF37; background: transparent;"> Saree </button> <button class="category-filter px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-sm font-medium tracking-wider uppercase transition-all duration-300 border-2" data-category="sharara" style="border-color: #D4AF37; color: #D4AF37; background: transparent;"> Sharara </button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8" id="outfits-grid"><!-- GR101 -->
+       <div class="outfit-card rounded-2xl overflow-hidden bg-white shadow-lg border border-beige/40 scroll-reveal cursor-pointer" data-category="lehenga" onclick="openOutfitPopup('GR101', 'Ivory Heavy Handwork Lehenga Set', 'Exquisite ivory lehenga with intricate hand embroidery.', 'https://i.imgur.com/rUd3afp.png')">
+        <div class="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream to-beige"><img src="https://i.imgur.com/rUd3afp.png" alt="Ivory Heavy Handwork Lehenga Set" loading="lazy" class="outfit-img-inner w-full h-full object-cover" onerror="this.style.background='#F0E8DA';">
+         <div class="outfit-overlay absolute inset-0 bg-charcoal/30 flex items-center justify-center opacity-0"><button onclick="event.stopPropagation(); openWhatsApp('GR101', 'Ivory Heavy Handwork Lehenga Set')" class="bg-white text-charcoal font-sans text-xs tracking-widest uppercase px-6 py-3 rounded-full font-medium hover:bg-gold hover:text-white transition-all">Rent Now</button>
+         </div>
+         <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full"><span class="text-xs font-sans font-medium tracking-wider text-goldDark">GR101</span>
+         </div>
+        </div>
+        <div class="p-5 sm:p-6">
+         <div class="mb-3"><span class="text-xs font-sans font-medium tracking-wider text-goldDark uppercase block mb-2">GR101</span>
+          <h3 class="font-serif text-lg sm:text-xl font-bold text-charcoal">Ivory Heavy Handwork Lehenga Set</h3>
+         </div>
+         <p class="font-sans text-sm text-charcoal/70 mb-4 leading-relaxed line-clamp-2">Exquisite ivory lehenga with intricate hand embroidery and traditional detailing.</p><button onclick="event.stopPropagation(); openWhatsApp('GR101', 'Ivory Heavy Handwork Lehenga Set')" class="flex items-center gap-2 text-gold hover:text-goldDark transition-colors font-sans text-sm font-medium tracking-wider uppercase bg-none border-none cursor-pointer p-0">
+          <svg class="w-4 h-4" viewbox="0 0 24 24" fill="currentColor">
+           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.359 0-4.542-.803-6.273-2.152l-.44-.352-3.17 1.063 1.063-3.17-.352-.44A9.96 9.96 0 0112 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" />
+          </svg> Rent on WhatsApp </button>
+        </div>
+       </div><!-- GR102 -->
+       <div class="outfit-card rounded-2xl overflow-hidden bg-white shadow-lg border border-beige/40 scroll-reveal cursor-pointer" data-category="lehenga" onclick="openOutfitPopup('GR102', 'Champagne Sequin &amp; Mirror Work Lehenga Set', 'Luxurious champagne with sequins and mirror embellishments.', 'https://i.imgur.com/BwEAlB9.png')">
+        <div class="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream to-beige"><img src="https://i.imgur.com/BwEAlB9.png" alt="Black Zardosi Work Sharara Set" loading="lazy" class="outfit-img-inner w-full h-full object-cover" onerror="this.style.background='#F0E8DA';">
+         <div class="outfit-overlay absolute inset-0 bg-charcoal/30 flex items-center justify-center opacity-0"><button onclick="event.stopPropagation(); openWhatsApp('GR102', 'Champagne Sequin &amp; Mirror Work Lehenga Set')" class="bg-white text-charcoal font-sans text-xs tracking-widest uppercase px-6 py-3 rounded-full font-medium hover:bg-gold hover:text-white transition-all">Rent Now</button>
+         </div>
+         <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full"><span class="text-xs font-sans font-medium tracking-wider text-goldDark">GR102</span>
+         </div>
+        </div>
+        <div class="p-5 sm:p-6">
+         <div class="mb-3"><span class="text-xs font-sans font-medium tracking-wider text-goldDark uppercase block mb-2">GR102</span>
+          <h3 class="font-serif text-lg sm:text-xl font-bold text-charcoal">Champagne Sequin &amp; Mirror Work Lehenga Set</h3>
+         </div>
+         <p class="font-sans text-sm text-charcoal/70 mb-4 leading-relaxed line-clamp-2">Luxurious champagne with sequins and mirror embellishments for a dazzling look.</p><button onclick="event.stopPropagation(); openWhatsApp('GR102', 'Champagne Sequin &amp; Mirror Work Lehenga Set')" class="flex items-center gap-2 text-gold hover:text-goldDark transition-colors font-sans text-sm font-medium tracking-wider uppercase bg-none border-none cursor-pointer p-0">
+          <svg class="w-4 h-4" viewbox="0 0 24 24" fill="currentColor">
+           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.359 0-4.542-.803-6.273-2.152l-.44-.352-3.17 1.063 1.063-3.17-.352-.44A9.96 9.96 0 0112 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" />
+          </svg> Rent on WhatsApp </button>
+        </div>
+       </div><!-- GR103 -->
+       <div class="outfit-card rounded-2xl overflow-hidden bg-white shadow-lg border border-beige/40 scroll-reveal cursor-pointer" data-category="sharara" onclick="openOutfitPopup('GR103', 'Black Zardosi Work Sharara Set', 'Elegant black sharara with intricate zardosi embroidery.', 'https://i.imgur.com/MwdpcAY.png')">
+        <div class="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream to-beige"><img src="https://i.imgur.com/MwdpcAY.png" alt="Champagne Sequin &amp; Mirror Work Lehenga Set" loading="lazy" class="outfit-img-inner w-full h-full object-cover" onerror="this.style.background='#F0E8DA';">
+         <div class="outfit-overlay absolute inset-0 bg-charcoal/30 flex items-center justify-center opacity-0"><button onclick="event.stopPropagation(); openWhatsApp('GR103', 'Black Zardosi Work Sharara Set')" class="bg-white text-charcoal font-sans text-xs tracking-widest uppercase px-6 py-3 rounded-full font-medium hover:bg-gold hover:text-white transition-all">Rent Now</button>
+         </div>
+         <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full"><span class="text-xs font-sans font-medium tracking-wider text-goldDark">GR103</span>
+         </div>
+        </div>
+        <div class="p-5 sm:p-6">
+         <div class="mb-3"><span class="text-xs font-sans font-medium tracking-wider text-goldDark uppercase block mb-2">GR103</span>
+          <h3 class="font-serif text-lg sm:text-xl font-bold text-charcoal">Black Zardosi Work Sharara Set</h3>
+         </div>
+         <p class="font-sans text-sm text-charcoal/70 mb-4 leading-relaxed line-clamp-2">Elegant black sharara with intricate zardosi embroidery and traditional craftsmanship.</p><button onclick="event.stopPropagation(); openWhatsApp('GR103', 'Black Zardosi Work Sharara Set')" class="flex items-center gap-2 text-gold hover:text-goldDark transition-colors font-sans text-sm font-medium tracking-wider uppercase bg-none border-none cursor-pointer p-0">
+          <svg class="w-4 h-4" viewbox="0 0 24 24" fill="currentColor">
+           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.359 0-4.542-.803-6.273-2.152l-.44-.352-3.17 1.063 1.063-3.17-.352-.44A9.96 9.96 0 0112 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" />
+          </svg> Rent on WhatsApp </button>
+        </div>
+       </div><!-- GR104 -->
+       <div class="outfit-card rounded-2xl overflow-hidden bg-white shadow-lg border border-beige/40 scroll-reveal cursor-pointer" data-category="anarkali" onclick="openOutfitPopup('GR104', 'Pink Banarasi Brocade Anarkali Set', 'Traditional pink Banarasi with stunning brocade work.', 'https://i.imgur.com/QebxTHN.jpeg')">
+        <div class="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream to-beige"><img src="https://i.imgur.com/QebxTHN.jpeg" alt="Pink Banarasi Brocade Anarkali Set" loading="lazy" class="outfit-img-inner w-full h-full object-cover" onerror="this.style.background='#F0E8DA';">
+         <div class="outfit-overlay absolute inset-0 bg-charcoal/30 flex items-center justify-center opacity-0"><button onclick="event.stopPropagation(); openWhatsApp('GR104', 'Pink Banarasi Brocade Anarkali Set')" class="bg-white text-charcoal font-sans text-xs tracking-widest uppercase px-6 py-3 rounded-full font-medium hover:bg-gold hover:text-white transition-all">Rent Now</button>
+         </div>
+         <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full"><span class="text-xs font-sans font-medium tracking-wider text-goldDark">GR104</span>
+         </div>
+        </div>
+        <div class="p-5 sm:p-6">
+         <div class="mb-3"><span class="text-xs font-sans font-medium tracking-wider text-goldDark uppercase block mb-2">GR104</span>
+          <h3 class="font-serif text-lg sm:text-xl font-bold text-charcoal">Pink Banarasi Brocade Anarkali Set</h3>
+         </div>
+         <p class="font-sans text-sm text-charcoal/70 mb-4 leading-relaxed line-clamp-2">Traditional pink Banarasi with stunning brocade work and classic elegance.</p><button onclick="event.stopPropagation(); openWhatsApp('GR104', 'Pink Banarasi Brocade Anarkali Set')" class="flex items-center gap-2 text-gold hover:text-goldDark transition-colors font-sans text-sm font-medium tracking-wider uppercase bg-none border-none cursor-pointer p-0">
+          <svg class="w-4 h-4" viewbox="0 0 24 24" fill="currentColor">
+           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.359 0-4.542-.803-6.273-2.152l-.44-.352-3.17 1.063 1.063-3.17-.352-.44A9.96 9.96 0 0112 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" />
+          </svg> Rent on WhatsApp </button>
+        </div>
+       </div><!-- GR105 -->
+       <div class="outfit-card rounded-2xl overflow-hidden bg-white shadow-lg border border-beige/40 scroll-reveal cursor-pointer" data-category="anarkali" onclick="openOutfitPopup('GR105', 'Lavender Mughal Inspired Anarkali Set', 'Lavender anarkali inspired by Mughal architecture.', 'https://i.imgur.com/GJBswcS.jpeg')">
+        <div class="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream to-beige"><img src="https://i.imgur.com/GJBswcS.jpeg" alt="Lavender Mughal Inspired Anarkali Set" loading="lazy" class="outfit-img-inner w-full h-full object-cover" onerror="this.style.background='#F0E8DA';">
+         <div class="outfit-overlay absolute inset-0 bg-charcoal/30 flex items-center justify-center opacity-0"><button onclick="event.stopPropagation(); openWhatsApp('GR105', 'Lavender Mughal Inspired Anarkali Set')" class="bg-white text-charcoal font-sans text-xs tracking-widest uppercase px-6 py-3 rounded-full font-medium hover:bg-gold hover:text-white transition-all">Rent Now</button>
+         </div>
+         <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full"><span class="text-xs font-sans font-medium tracking-wider text-goldDark">GR105</span>
+         </div>
+        </div>
+        <div class="p-5 sm:p-6">
+         <div class="mb-3"><span class="text-xs font-sans font-medium tracking-wider text-goldDark uppercase block mb-2">GR105</span>
+          <h3 class="font-serif text-lg sm:text-xl font-bold text-charcoal">Lavender Mughal Inspired Anarkali Set</h3>
+         </div>
+         <p class="font-sans text-sm text-charcoal/70 mb-4 leading-relaxed line-clamp-2">Lavender anarkali inspired by Mughal architecture with intricate details.</p><button onclick="event.stopPropagation(); openWhatsApp('GR105', 'Lavender Mughal Inspired Anarkali Set')" class="flex items-center gap-2 text-gold hover:text-goldDark transition-colors font-sans text-sm font-medium tracking-wider uppercase bg-none border-none cursor-pointer p-0">
+          <svg class="w-4 h-4" viewbox="0 0 24 24" fill="currentColor">
+           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.359 0-4.542-.803-6.273-2.152l-.44-.352-3.17 1.063 1.063-3.17-.352-.44A9.96 9.96 0 0112 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" />
+          </svg> Rent on WhatsApp </button>
+        </div>
+       </div><!-- GR106 -->
+       <div class="outfit-card rounded-2xl overflow-hidden bg-white shadow-lg border border-beige/40 scroll-reveal cursor-pointer" data-category="anarkali" onclick="openOutfitPopup('GR106', 'Mint Green Mughal Jaal Anarkali Set', 'Stunning mint green with Mughal jaal work.', 'https://i.imgur.com/YRTqKoV.jpeg')">
+        <div class="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream to-beige"><img src="https://i.imgur.com/YRTqKoV.jpeg" alt="Mint Green Mughal Jaal Anarkali Set" loading="lazy" class="outfit-img-inner w-full h-full object-cover" onerror="this.style.background='#F0E8DA';">
+         <div class="outfit-overlay absolute inset-0 bg-charcoal/30 flex items-center justify-center opacity-0"><button onclick="event.stopPropagation(); openWhatsApp('GR106', 'Mint Green Mughal Jaal Anarkali Set')" class="bg-white text-charcoal font-sans text-xs tracking-widest uppercase px-6 py-3 rounded-full font-medium hover:bg-gold hover:text-white transition-all">Rent Now</button>
+         </div>
+         <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full"><span class="text-xs font-sans font-medium tracking-wider text-goldDark">GR106</span>
+         </div>
+        </div>
+        <div class="p-5 sm:p-6">
+         <div class="mb-3"><span class="text-xs font-sans font-medium tracking-wider text-goldDark uppercase block mb-2">GR106</span>
+          <h3 class="font-serif text-lg sm:text-xl font-bold text-charcoal">Mint Green Mughal Jaal Anarkali Set</h3>
+         </div>
+         <p class="font-sans text-sm text-charcoal/70 mb-4 leading-relaxed line-clamp-2">Stunning mint green with Mughal jaal work and traditional embroidery.</p><button onclick="event.stopPropagation(); openWhatsApp('GR106', 'Mint Green Mughal Jaal Anarkali Set')" class="flex items-center gap-2 text-gold hover:text-goldDark transition-colors font-sans text-sm font-medium tracking-wider uppercase bg-none border-none cursor-pointer p-0">
+          <svg class="w-4 h-4" viewbox="0 0 24 24" fill="currentColor">
+           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.359 0-4.542-.803-6.273-2.152l-.44-.352-3.17 1.063 1.063-3.17-.352-.44A9.96 9.96 0 0112 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" />
+          </svg> Rent on WhatsApp </button>
+        </div>
+       </div><!-- GR107 -->
+       <div class="outfit-card rounded-2xl overflow-hidden bg-white shadow-lg border border-beige/40 scroll-reveal cursor-pointer" data-category="saree" onclick="openOutfitPopup('GR107', 'Peach Sabyasachi Inspired Ready-to-Wear Saree', 'Designer-inspired ready-to-wear saree in beautiful peach.', 'https://i.imgur.com/GZa4n6C.jpeg')">
+        <div class="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream to-beige"><img src="https://i.imgur.com/GZa4n6C.jpeg" alt="Peach Sabyasachi Inspired Ready-to-Wear Saree" loading="lazy" class="outfit-img-inner w-full h-full object-cover" onerror="this.style.background='#F0E8DA';">
+         <div class="outfit-overlay absolute inset-0 bg-charcoal/30 flex items-center justify-center opacity-0"><button onclick="event.stopPropagation(); openWhatsApp('GR107', 'Peach Sabyasachi Inspired Ready-to-Wear Saree')" class="bg-white text-charcoal font-sans text-xs tracking-widest uppercase px-6 py-3 rounded-full font-medium hover:bg-gold hover:text-white transition-all">Rent Now</button>
+         </div>
+         <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full"><span class="text-xs font-sans font-medium tracking-wider text-goldDark">GR107</span>
+         </div>
+        </div>
+        <div class="p-5 sm:p-6">
+         <div class="mb-3"><span class="text-xs font-sans font-medium tracking-wider text-goldDark uppercase block mb-2">GR107</span>
+          <h3 class="font-serif text-lg sm:text-xl font-bold text-charcoal">Peach Sabyasachi Inspired Ready-to-Wear Saree</h3>
+         </div>
+         <p class="font-sans text-sm text-charcoal/70 mb-4 leading-relaxed line-clamp-2">Designer-inspired ready-to-wear saree in beautiful peach with luxe details.</p><button onclick="openWhatsApp('GR107', 'Peach Sabyasachi Inspired Ready-to-Wear Saree')" class="flex items-center gap-2 text-gold hover:text-goldDark transition-colors font-sans text-sm font-medium tracking-wider uppercase bg-none border-none cursor-pointer p-0">
+          <svg class="w-4 h-4" viewbox="0 0 24 24" fill="currentColor">
+           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.359 0-4.542-.803-6.273-2.152l-.44-.352-3.17 1.063 1.063-3.17-.352-.44A9.96 9.96 0 0112 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" />
+          </svg> Rent on WhatsApp </button>
+        </div>
+       </div><!-- GR108 -->
+       <div class="outfit-card rounded-2xl overflow-hidden bg-white shadow-lg border border-beige/40 scroll-reveal" data-category="gown">
+        <div class="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream to-beige"><img src="https://i.imgur.com/SXmxcuL.jpeg" alt="Powder Blue Mirror Work Pleated Gown" loading="lazy" class="outfit-img-inner w-full h-full object-cover" onerror="this.style.background='#F0E8DA';">
+         <div class="outfit-overlay absolute inset-0 bg-charcoal/30 flex items-center justify-center opacity-0"><button onclick="openWhatsApp('GR108', 'Powder Blue Mirror Work Pleated Gown')" class="bg-white text-charcoal font-sans text-xs tracking-widest uppercase px-6 py-3 rounded-full font-medium hover:bg-gold hover:text-white transition-all">Rent Now</button>
+         </div>
+         <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full"><span class="text-xs font-sans font-medium tracking-wider text-goldDark">GR108</span>
+         </div>
+        </div>
+        <div class="p-5 sm:p-6">
+         <div class="mb-3"><span class="text-xs font-sans font-medium tracking-wider text-goldDark uppercase block mb-2">GR108</span>
+          <h3 class="font-serif text-lg sm:text-xl font-bold text-charcoal">Powder Blue Mirror Work Pleated Gown</h3>
+         </div>
+         <p class="font-sans text-sm text-charcoal/70 mb-4 leading-relaxed line-clamp-2">Elegant powder blue gown with mirror work embellishments and pleated design.</p><button onclick="openWhatsApp('GR108', 'Powder Blue Mirror Work Pleated Gown')" class="flex items-center gap-2 text-gold hover:text-goldDark transition-colors font-sans text-sm font-medium tracking-wider uppercase bg-none border-none cursor-pointer p-0">
+          <svg class="w-4 h-4" viewbox="0 0 24 24" fill="currentColor">
+           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.359 0-4.542-.803-6.273-2.152l-.44-.352-3.17 1.063 1.063-3.17-.352-.44A9.96 9.96 0 0112 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" />
+          </svg> Rent on WhatsApp </button>
+        </div>
+       </div><!-- GR109 -->
+       <div class="outfit-card rounded-2xl overflow-hidden bg-white shadow-lg border border-beige/40 scroll-reveal" data-category="lehenga">
+        <div class="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream to-beige"><img src="https://i.imgur.com/21Lhlbc.jpeg" alt="Lavender Zardosi Embroidered Lehenga Set" loading="lazy" class="outfit-img-inner w-full h-full object-cover" onerror="this.style.background='#F0E8DA';">
+         <div class="outfit-overlay absolute inset-0 bg-charcoal/30 flex items-center justify-center opacity-0"><button onclick="openWhatsApp('GR109', 'Lavender Zardosi Embroidered Lehenga Set')" class="bg-white text-charcoal font-sans text-xs tracking-widest uppercase px-6 py-3 rounded-full font-medium hover:bg-gold hover:text-white transition-all">Rent Now</button>
+         </div>
+         <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full"><span class="text-xs font-sans font-medium tracking-wider text-goldDark">GR109</span>
+         </div>
+        </div>
+        <div class="p-5 sm:p-6">
+         <div class="mb-3"><span class="text-xs font-sans font-medium tracking-wider text-goldDark uppercase block mb-2">GR109</span>
+          <h3 class="font-serif text-lg sm:text-xl font-bold text-charcoal">Lavender Zardosi Embroidered Lehenga Set</h3>
+         </div>
+         <p class="font-sans text-sm text-charcoal/70 mb-4 leading-relaxed line-clamp-2">Beautiful lavender lehenga with zardosi embroidery and traditional craftsmanship.</p><button onclick="openWhatsApp('GR109', 'Lavender Zardosi Embroidered Lehenga Set')" class="flex items-center gap-2 text-gold hover:text-goldDark transition-colors font-sans text-sm font-medium tracking-wider uppercase bg-none border-none cursor-pointer p-0">
+          <svg class="w-4 h-4" viewbox="0 0 24 24" fill="currentColor">
+           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.359 0-4.542-.803-6.273-2.152l-.44-.352-3.17 1.063 1.063-3.17-.352-.44A9.96 9.96 0 0112 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" />
+          </svg> Rent on WhatsApp </button>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section><!-- Instagram Gallery Section -->
+    <section id="instagram" class="py-16 sm:py-20 lg:py-28 bg-gradient-to-b from-cream/30 to-white">
+     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12 sm:mb-16 scroll-reveal"><span class="text-xs font-sans font-medium tracking-[0.3em] uppercase text-gold mb-3 block">@glam_rentora</span>
+       <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-light text-charcoal mb-4">Follow Our Style</h2>
+       <div class="gold-line max-w-xs mx-auto"></div>
+      </div>
+      <div class="flex flex-col items-center gap-8">
+       <p class="font-sans text-lg text-warmGray text-center max-w-2xl">Discover stunning outfit styling, customer looks, and fashion inspiration on our Instagram. See how our pieces come to life at real events!</p><a href="https://instagram.com/glam_rentora" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 btn-gold text-white font-sans font-medium tracking-widest uppercase px-8 py-4 rounded-full hover:shadow-lg transition-all"> <i data-lucide="instagram" class="w-5 h-5"></i> Follow @glam_rentora </a>
+      </div>
+     </div>
+    </section><!-- Footer -->
+    <footer class="bg-charcoal text-white pt-12 sm:pt-16 pb-6">
+     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 mb-12"><!-- Brand -->
+       <div>
+        <div class="flex items-center gap-2 mb-4">
+         <img src="https://i.imgur.com/ycx62kk.png" alt="Glam Rentora Logo" class="w-12 h-12 object-contain"><span class="font-serif text-2xl font-semibold tracking-wide">Glam Rentora</span>
+        </div>
+        <p class="font-sans text-sm text-white/50 leading-relaxed max-w-xs">Premium fashion rental boutique for lehengas, sarees, sharara sets, and designer anarkalis for every special occasion.</p>
+       </div><!-- Quick Links -->
+       <div>
+        <h4 class="font-sans text-xs font-medium tracking-[0.2em] uppercase text-gold mb-4">Quick Links</h4>
+        <ul class="space-y-2.5">
+         <li><a href="#collection" class="font-sans text-sm text-white/60 hover:text-gold transition-colors">Collection</a></li>
+         <li><a href="#instagram" class="font-sans text-sm text-white/60 hover:text-gold transition-colors">Gallery</a></li>
+         <li><a href="https://wa.me/983339120" target="_blank" rel="noopener noreferrer" class="font-sans text-sm text-white/60 hover:text-gold transition-colors">Contact Us</a></li>
+        </ul>
+       </div><!-- Contact -->
+       <div>
+        <h4 class="font-sans text-xs font-medium tracking-[0.2em] uppercase text-gold mb-4">Get In Touch</h4>
+        <ul class="space-y-3">
+         <li><a href="https://wa.me/919833319120" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-white/60 hover:text-gold transition-colors">
+           <svg class="w-4 h-4 text-gold" viewbox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.359 0-4.542-.803-6.273-2.152l-.44-.352-3.17 1.063 1.063-3.17-.352-.44A9.96 9.96 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" />
+           </svg><span class="font-sans text-sm">WhatsApp: 919833319120</span> </a></li>
+         <li><a href="https://instagram.com/sobeize" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-white/60 hover:text-gold transition-colors"> <i data-lucide="instagram" class="w-4 h-4 text-gold"></i> <span class="font-sans text-sm">@sobeize</span> </a></li>
+        </ul>
+       </div>
+      </div>
+      <div class="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+       <p class="font-sans text-xs text-white/30">© 2025 Glam Rentora. All rights reserved.</p>
+       <div class="flex items-center gap-4"><a href="https://instagram.com/sobeize" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-white/5 hover:bg-gold/20 flex items-center justify-center transition-colors"> <i data-lucide="instagram" class="w-4 h-4 text-white/50 hover:text-gold"></i> </a> <a href="https://wa.me/919833319120" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-white/5 hover:bg-gold/20 flex items-center justify-center transition-colors">
+         <svg class="w-4 h-4 text-white/50" viewbox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.359 0-4.542-.803-6.273-2.152l-.44-.352-3.17 1.063 1.063-3.17-.352-.44A9.96 9.96 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" />
+         </svg></a>
+       </div>
+      </div>
+     </div>
+    </footer>
+   </main><!-- Floating WhatsApp Button --> <a href="https://wa.me/919833319120" target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 shadow-lg shadow-green-500/30 flex items-center justify-center transition-all hover:scale-110" aria-label="Chat on WhatsApp" style="animation: floatUp 3s ease-in-out infinite;">
+    <svg class="w-7 h-7 text-white" viewbox="0 0 24 24" fill="currentColor">
+     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.359 0-4.542-.803-6.273-2.152l-.44-.352-3.17 1.063 1.063-3.17-.352-.44A9.96 9.96 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" />
+    </svg></a> <!-- Outfit Detail Popup -->
+   <div id="outfit-popup" class="fixed inset-0 z-50 flex items-center justify-center hidden" style="background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); animation: fadeIn 0.3s ease;">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md sm:max-w-xl lg:max-w-2xl h-full sm:h-auto max-h-[95vh] overflow-hidden flex flex-col my-auto">
+     <!-- Close Button --> <button id="close-popup" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-gray-100 transition-colors" aria-label="Close popup">
+      <svg class="w-6 h-6 text-charcoal" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg></button> <!-- Scrollable Content -->
+     <div class="overflow-y-auto flex-1 flex flex-col">
+      <!-- Outfit Image -->
+      <div class="w-full aspect-[3/4] bg-gradient-to-br from-cream to-beige overflow-hidden flex-shrink-0">
+       <img id="popup-outfit-image" src="" alt="Outfit" class="w-full h-full object-cover" loading="lazy" onerror="this.style.background='#F0E8DA';">
+      </div><!-- Outfit Details -->
+      <div class="p-6 sm:p-8 space-y-6">
+       <!-- Code Badge -->
+       <div>
+        <span id="popup-outfit-code" class="inline-block bg-plum/10 text-plum px-4 py-2 rounded-full text-xs font-medium tracking-wider uppercase"></span>
+       </div><!-- Outfit Name -->
+       <div>
+        <h2 id="popup-outfit-name" class="font-serif text-2xl sm:text-3xl font-semibold text-charcoal leading-tight"></h2>
+       </div><!-- Description -->
+       <div>
+        <p id="popup-outfit-description" class="font-sans text-sm sm:text-base text-charcoal/70 leading-relaxed"></p>
+       </div><!-- Calendar Section -->
+       <div class="space-y-4 pt-2 border-t border-beige/40">
+        <div>
+         <h3 class="font-serif text-lg font-semibold text-charcoal mb-4">Select Rental Date</h3><!-- Calendar Container -->
+         <div class="bg-plum/5 rounded-2xl p-4 space-y-4">
+          <div class="flex items-center justify-between">
+           <button onclick="previousMonth()" class="w-8 h-8 rounded-full hover:bg-plum/10 transition-colors flex items-center justify-center" aria-label="Previous month">
+            <svg class="w-4 h-4 text-charcoal" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg></button>
+           <h4 id="calendar-month-year" class="font-serif text-base font-semibold text-charcoal"></h4><button onclick="nextMonth()" class="w-8 h-8 rounded-full hover:bg-plum/10 transition-colors flex items-center justify-center" aria-label="Next month">
+            <svg class="w-4 h-4 text-charcoal" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg></button>
+          </div><!-- Day Labels -->
+          <div class="grid grid-cols-7 gap-2">
+           <div class="text-center text-xs font-medium text-warmGray py-2">
+            Sun
+           </div>
+           <div class="text-center text-xs font-medium text-warmGray py-2">
+            Mon
+           </div>
+           <div class="text-center text-xs font-medium text-warmGray py-2">
+            Tue
+           </div>
+           <div class="text-center text-xs font-medium text-warmGray py-2">
+            Wed
+           </div>
+           <div class="text-center text-xs font-medium text-warmGray py-2">
+            Thu
+           </div>
+           <div class="text-center text-xs font-medium text-warmGray py-2">
+            Fri
+           </div>
+           <div class="text-center text-xs font-medium text-warmGray py-2">
+            Sat
+           </div>
+          </div><!-- Calendar Grid -->
+          <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
+         </div>
+        </div><!-- Selected Date Display -->
+        <div class="text-center bg-plum/5 rounded-xl p-3">
+         <p class="font-sans text-xs text-warmGray mb-1">Rental Date:</p>
+         <p id="selected-date-display" class="font-serif text-base font-semibold text-warmGray">No date selected</p>
+        </div>
+       </div><!-- WhatsApp Button --> <button id="popup-whatsapp-btn" class="w-full btn-gold text-white font-sans font-medium tracking-wider uppercase px-8 py-4 rounded-full flex items-center justify-center gap-2 transition-all mt-6">
+        <svg class="w-5 h-5" viewbox="0 0 24 24" fill="currentColor">
+         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.96 11.96 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.359 0-4.542-.803-6.273-2.152l-.44-.352-3.17 1.063 1.063-3.17-.352-.44A9.96 9.96 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z" />
+        </svg> Rent on WhatsApp </button>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    // WhatsApp message formatter with rental date
+    function openWhatsApp(code, name, rentalDate = null) {
+      let message = `Hi Glam Rentora,\n\nI want to rent this outfit.\n\nOutfit Code: ${code}\nOutfit Name: ${name}`;
+      
+      if (rentalDate) {
+        message += `\nRental Date: ${rentalDate}`;
+      }
+      
+      message += `\n\nPlease share price and availability.`;
+      
+      const encodedMessage = encodeURIComponent(message);
+      window.open(`https://wa.me/919833319120?text=${encodedMessage}`, '_blank');
+    }
+
+    // Outfit popup functions
+    let selectedRentalDate = null;
+
+    function openOutfitPopup(code, name, description, imageUrl) {
+      selectedRentalDate = null;
+      const popup = document.getElementById('outfit-popup');
+      document.getElementById('popup-outfit-code').textContent = code;
+      document.getElementById('popup-outfit-name').textContent = name;
+      document.getElementById('popup-outfit-description').textContent = description;
+      document.getElementById('popup-outfit-image').src = imageUrl;
+      
+      document.getElementById('selected-date-display').textContent = 'No date selected';
+      document.getElementById('selected-date-display').style.color = '#8A8075';
+      
+      // Reset calendar
+      generateCalendar();
+      
+      const whatsappBtn = document.getElementById('popup-whatsapp-btn');
+      whatsappBtn.onclick = () => openWhatsApp(code, name, selectedRentalDate);
+      
+      popup.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Image slider state removed - using single image layout
+
+    function closeOutfitPopup() {
+      const popup = document.getElementById('outfit-popup');
+      popup.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Close popup on close button click
+    document.getElementById('close-popup').addEventListener('click', closeOutfitPopup);
+
+    // Close popup when clicking outside the popup content
+    document.getElementById('outfit-popup').addEventListener('click', (e) => {
+      if (e.target.id === 'outfit-popup') {
+        closeOutfitPopup();
+      }
+    });
+
+    // Close popup on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeOutfitPopup();
+      }
+    });
+
+    // Calendar functionality
+    let currentCalendarMonth = new Date().getMonth();
+    let currentCalendarYear = new Date().getFullYear();
+    
+    function generateCalendar() {
+      const firstDay = new Date(currentCalendarYear, currentCalendarMonth, 1).getDay();
+      const daysInMonth = new Date(currentCalendarYear, currentCalendarMonth + 1, 0).getDate();
+      const calendarGrid = document.getElementById('calendar-grid');
+      const monthYearDisplay = document.getElementById('calendar-month-year');
+      
+      monthYearDisplay.textContent = new Date(currentCalendarYear, currentCalendarMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      
+      calendarGrid.innerHTML = '';
+      
+      // Add empty cells for days before first day of month
+      for (let i = 0; i < firstDay; i++) {
+        const emptyCell = document.createElement('div');
+        calendarGrid.appendChild(emptyCell);
+      }
+      
+      // Add day cells
+      const today = new Date();
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayCell = document.createElement('button');
+        dayCell.type = 'button';
+        dayCell.textContent = day;
+        dayCell.className = 'text-xs font-medium py-2 rounded transition-colors';
+        
+        const cellDate = new Date(currentCalendarYear, currentCalendarMonth, day);
+        
+        // Disable past dates
+        if (cellDate < today && cellDate.toDateString() !== today.toDateString()) {
+          dayCell.style.color = '#D1C7BD';
+          dayCell.style.cursor = 'not-allowed';
+          dayCell.disabled = true;
+        } else {
+          dayCell.style.color = '#2C2C2C';
+          dayCell.style.cursor = 'pointer';
+          dayCell.addEventListener('click', () => {
+            selectDate(day, currentCalendarMonth, currentCalendarYear);
+          });
+          dayCell.addEventListener('mouseenter', () => {
+            if (!dayCell.disabled) {
+              dayCell.style.backgroundColor = '#F0E8DA';
+            }
+          });
+          dayCell.addEventListener('mouseleave', () => {
+            if (dayCell !== document.querySelector('.selected-date')) {
+              dayCell.style.backgroundColor = 'transparent';
+            }
+          });
+        }
+        
+        // Highlight today
+        if (cellDate.toDateString() === today.toDateString()) {
+          dayCell.style.borderBottom = '2px solid #D4AF37';
+        }
+        
+        calendarGrid.appendChild(dayCell);
+      }
+    }
+    
+    function selectDate(day, month, year) {
+      // Remove previous selection styling
+      document.querySelectorAll('#calendar-grid button.selected-date').forEach(btn => {
+        btn.classList.remove('selected-date');
+        btn.style.backgroundColor = 'transparent';
+        btn.style.color = '#2C2C2C';
+      });
+      
+      // Find and highlight selected day
+      const allDayButtons = document.querySelectorAll('#calendar-grid button');
+      let dayCounter = 0;
+      const firstDay = new Date(year, month, 1).getDay();
+      
+      for (let i = 0; i < allDayButtons.length; i++) {
+        if (i >= firstDay) {
+          dayCounter++;
+          if (dayCounter === day) {
+            allDayButtons[i].classList.add('selected-date');
+            allDayButtons[i].style.backgroundColor = '#D4AF37';
+            allDayButtons[i].style.color = 'white';
+            break;
+          }
+        }
+      }
+      
+      // Format and display selected date
+      const dateObj = new Date(year, month, day);
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      selectedRentalDate = dateObj.toLocaleDateString('en-US', options);
+      document.getElementById('selected-date-display').textContent = selectedRentalDate;
+      document.getElementById('selected-date-display').style.color = '#D4AF37';
+    }
+    
+    function previousMonth() {
+      if (currentCalendarMonth === 0) {
+        currentCalendarMonth = 11;
+        currentCalendarYear--;
+      } else {
+        currentCalendarMonth--;
+      }
+      generateCalendar();
+    }
+    
+    function nextMonth() {
+      if (currentCalendarMonth === 11) {
+        currentCalendarMonth = 0;
+        currentCalendarYear++;
+      } else {
+        currentCalendarMonth++;
+      }
+      generateCalendar();
+    }
+
+    // Mobile menu toggle
+    const mobileToggle = document.getElementById('mobile-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    let menuOpen = false;
+
+    mobileToggle.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      if (menuOpen) {
+        mobileMenu.style.maxHeight = '400px';
+        mobileMenu.style.opacity = '1';
+      } else {
+        mobileMenu.style.maxHeight = '0';
+        mobileMenu.style.opacity = '0';
+      }
+    });
+
+    // Close mobile menu on link click
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        menuOpen = false;
+        mobileMenu.style.maxHeight = '0';
+        mobileMenu.style.opacity = '0';
+      });
+    });
+
+    // Scroll reveal animation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+
+    // Nav background on scroll
+    const appWrapper = document.getElementById('app-wrapper');
+    const nav = document.getElementById('main-nav');
+    appWrapper.addEventListener('scroll', () => {
+      if (appWrapper.scrollTop > 50) {
+        nav.classList.add('shadow-sm');
+      } else {
+        nav.classList.remove('shadow-sm');
+      }
+    });
+
+    // Initialize SDK and apply config
+    const defaultConfig = {
+      hero_headline: 'Rent Luxury. Wear Glam.',
+      hero_subheadline: 'Designer lehengas, sarees, sharara sets, and anarkalis for every occasion. Wear luxury without the price tag.',
+      whatsapp_number: '983339120',
+      instagram_handle: '@glam_rentora'
+    };
+
+    function applyConfig(config) {
+      const headline = document.getElementById('hero-headline');
+      if (headline) {
+        const text = config.hero_headline || defaultConfig.hero_headline;
+        const parts = text.split('.');
+        if (parts.length >= 2) {
+          headline.innerHTML = `${parts[0].trim()}.<br><span class="font-semibold italic text-goldDark">${parts.slice(1).join('.').trim()}</span>`;
+        } else {
+          headline.textContent = text;
+        }
+      }
+
+      const subheadline = document.getElementById('hero-subheadline');
+      if (subheadline) subheadline.textContent = config.hero_subheadline || defaultConfig.hero_subheadline;
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          applyConfig(config);
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['hero_headline', config.hero_headline || defaultConfig.hero_headline],
+          ['hero_subheadline', config.hero_subheadline || defaultConfig.hero_subheadline],
+          ['whatsapp_number', config.whatsapp_number || defaultConfig.whatsapp_number],
+          ['instagram_handle', config.instagram_handle || defaultConfig.instagram_handle]
+        ])
+      });
+    }
+
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Category Filter Functionality
+    const categoryFilters = document.querySelectorAll('.category-filter');
+    const outfitCards = document.querySelectorAll('.outfit-card');
+    const searchInput = document.getElementById('outfit-search');
+
+    // Search functionality
+    searchInput.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toUpperCase().trim();
+      
+      categoryFilters.forEach(btn => btn.classList.remove('active'));
+      const allBtn = Array.from(categoryFilters).find(b => b.getAttribute('data-category') === 'all');
+      if (allBtn) {
+        allBtn.classList.add('active');
+        allBtn.style.background = '#D4AF37';
+        allBtn.style.color = 'white';
+      }
+      
+      let foundAny = false;
+      outfitCards.forEach(card => {
+        const cardCode = card.querySelector('[data-lucide="search"], span')?.textContent || 
+                        card.getAttribute('data-category');
+        const codeElement = card.querySelector('.absolute span');
+        const cardCodeText = codeElement ? codeElement.textContent.trim() : '';
+        
+        if (searchTerm === '' || cardCodeText.includes(searchTerm)) {
+          card.style.display = 'block';
+          foundAny = true;
+          card.style.animation = 'none';
+          setTimeout(() => {
+            card.style.animation = 'fadeUp 0.6s ease-out forwards';
+          }, 10);
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    categoryFilters.forEach(btn => {
+      btn.addEventListener('click', () => {
+        searchInput.value = '';
+        const selectedCategory = btn.getAttribute('data-category');
+        
+        // Update active button state
+        categoryFilters.forEach(b => {
+          b.classList.remove('active');
+          b.style.background = 'transparent';
+          b.style.color = '#D4AF37';
+        });
+        btn.classList.add('active');
+        btn.style.background = '#D4AF37';
+        btn.style.color = 'white';
+        
+        // Filter outfit cards
+        outfitCards.forEach(card => {
+          const cardCategory = card.getAttribute('data-category');
+          if (selectedCategory === 'all' || cardCategory === selectedCategory) {
+            card.style.display = 'block';
+            setTimeout(() => {
+              card.style.animation = 'none';
+              setTimeout(() => {
+                card.style.animation = 'fadeUp 0.6s ease-out forwards';
+              }, 10);
+            }, 10);
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9dc89c9b952747da',t:'MTc3MzU0NzIzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
